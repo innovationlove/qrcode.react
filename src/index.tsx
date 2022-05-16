@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: ISC
  */
 
-import React, {useRef, useEffect, useImperativeHandle} from 'react';
+import React, {useRef, useEffect} from 'react';
 import type {CSSProperties} from 'react';
 import qrcodegen from './third-party/qrcodegen';
 
@@ -170,15 +170,12 @@ const SUPPORTS_PATH2D = (function () {
   return true;
 })();
 
-const QRCodeCanvas = React.forwardRef<HTMLCanvasElement>((props: QRPropsCanvas, ref) => {
+function QRCodeCanvas(props: QRPropsCanvas) {
   const _canvas = useRef<HTMLCanvasElement>(null);
   const _image = useRef<HTMLImageElement>(null);
 
-  // We need to use both internal and external ref from one element: canvas
-  useImperativeHandle(ref, () => _canvas.current);
-
   function update() {
-    const { value, size, level, bgColor, fgColor, includeMargin } = props;
+    const {value, size, level, bgColor, fgColor, includeMargin} = props;
 
     if (_canvas.current != null) {
       const canvas = _canvas.current;
@@ -267,7 +264,7 @@ const QRCodeCanvas = React.forwardRef<HTMLCanvasElement>((props: QRPropsCanvas, 
     imageSettings,
     ...otherProps
   } = props;
-  const canvasStyle = { height: size, width: size, ...style };
+  const canvasStyle = {height: size, width: size, ...style};
   let img = null;
   let imgSrc = imageSettings?.src;
   if (imgSrc != null) {
@@ -275,7 +272,7 @@ const QRCodeCanvas = React.forwardRef<HTMLCanvasElement>((props: QRPropsCanvas, 
       <img
         src={imgSrc}
         key={imgSrc}
-        style={{ display: 'none' }}
+        style={{display: 'none'}}
         onLoad={() => {
           update();
         }}
@@ -295,7 +292,7 @@ const QRCodeCanvas = React.forwardRef<HTMLCanvasElement>((props: QRPropsCanvas, 
       {img}
     </>
   );
-});
+}
 QRCodeCanvas.defaultProps = DEFAULT_PROPS;
 
 function QRCodeSVG(props: QRPropsSVG) {
